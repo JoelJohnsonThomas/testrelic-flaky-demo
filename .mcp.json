@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "testrelic": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@testrelic/mcp@3.0.0",
+        "--caps",
+        "core,coverage,creation,healing,impact"
+      ],
+      "env": {
+        "TESTRELIC_MCP_TOKEN": "${TESTRELIC_MCP_TOKEN}"
+      }
+    }
+  }
+}

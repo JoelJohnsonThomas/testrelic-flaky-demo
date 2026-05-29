@@ -1,0 +1,11 @@
+{
+  "cloud": {
+    "apiKey": "$TESTRELIC_API_KEY",
+    "endpoint": "https://platform.testrelic.ai/api/v1",
+    "upload": "batch",
+    "timeout": 20000
+  },
+  "testrelic-repo": {
+    "name": "testrelic-flaky-demo"
+  }
+}

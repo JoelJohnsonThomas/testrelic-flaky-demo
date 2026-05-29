@@ -1,0 +1,34 @@
+name: Playwright Tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15 # hard cap so a reporter hang can never run the job forever
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+
+      # The suite intentionally includes 1 deterministic failure (broken selector)
+      # and 1 genuinely flaky test, so a non-zero exit is expected by design — this
+      # step validates that the tests run and behave, with the reporter bypassed.
+      - name: Validate suite (list reporter — always completes)
+        run: npx playwright test --reporter=list
+        continue-on-error: true
+
+      # Probe whether the TestRelic reporter + cloud upload work on Linux. On
+      # Windows it hangs at onBegin (see FINDINGS.md); this step is non-blocking and
+      # time-boxed, so it can never hang CI. If Linux is unaffected, this is where
+      # real dashboard data uploads. Needs the TESTRELIC_API_KEY Actions secret.
+      - name: Probe TestRelic reporter + cloud upload on Linux (non-blocking)
+        run: |
+          timeout 240 npx playwright test --timeout=30000 \
+            || echo "::warning::TestRelic reporter step exited non-zero/timed out — see FINDINGS.md"
+        continue-on-error: true
+        env:
+          TESTRELIC_API_KEY: ${{ secrets.TESTRELIC_API_KEY }}
+          TESTRELIC_UPLOAD_STRATEGY: batch
+          TESTRELIC_CLOUD_TIMEOUT: '20000'

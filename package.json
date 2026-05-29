@@ -1,0 +1,17 @@
+{
+  "name": "testrelic-flaky-demo",
+  "version": "1.0.0",
+  "description": "A small Playwright suite instrumented with @testrelic/playwright-analytics, with intentionally flaky flows and a broken selector, to explore TestRelic's failure-memory product from a forward-deployed engineer's seat.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:flaky": "playwright test tests/checkout.spec.ts tests/cart.spec.ts",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@testrelic/playwright-analytics": "^2.7.0"
+  }
+}
